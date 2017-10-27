@@ -9,11 +9,20 @@ import normalizeZip from '../../utils/normalizeZip'
 import normalizeState from '../../utils/normalizeState'
 
 class BrandFormField extends Component {
-  handleNumberToString = value => {
-    if (value) return value.toString()
+  handleNumberField = (value, previousValue) => {
+    const { max, min } = this.props
+    if (value < min || value > max) {
+      return previousValue
+    }
+    return value
   }
   render() {
-    const { fontFamily, name, options, type } = this.props
+    const {
+      fontFamily,
+      name,
+      options,
+      type
+    } = this.props
     switch(type) {
       case 'number':
         return (
@@ -25,7 +34,7 @@ class BrandFormField extends Component {
             component={renderTextField}
             className="field"
             style={{ fontFamily }}
-            normalize={this.handleNumberToString()}
+            normalize={this.handleNumberField}
           />
         )
       case 'phone':

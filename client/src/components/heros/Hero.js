@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Card } from 'material-ui/Card'
 
+import './hero.css'
 import heroContainer from '../../containers/heros/heroContainer'
 import HeroContent from './HeroContent'
 
@@ -13,15 +14,13 @@ const Hero = ({
   hasMedia,
   item,
   propsForParent,
-  propsForChild
 }) => {
   return (
     <div {...propsForParent}>
       <Card
         id={item._id}
         zDepth={0}
-        {...propsForChild}
-        className="hero"
+        className="hero-child"
       >
         <HeroContent
           dispatch={dispatch}

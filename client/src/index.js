@@ -10,15 +10,14 @@ import Theme from './containers/theme/Theme'
 
 import { fetchBrand } from './actions/brand'
 import { fetchCart } from './actions/cart'
-import { fetchOrders } from './actions/orders'
 import { fetchPages } from './actions/pages'
 import { fetchProducts } from './actions/products'
 import { fetchUser } from './actions/user'
 
 const store = configureStore()
 
-const token = localStorage.getItem('x-token')
-if (token) {
+const accessToken = localStorage.getItem('x-access-token')
+if (accessToken) {
   store.dispatch(fetchUser())
 }
 const cart = localStorage.getItem('cart')

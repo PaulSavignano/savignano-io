@@ -8,27 +8,30 @@ const H1 = ({
   className,
   color,
   textAlign,
+  textColor,
   textShadow,
   typography: {
     values: {
+      fontFamily,
+      fontWeight,
       h1FontFamily,
-      h1FontSize,
-      h1FontWeight,
-      h1LetterSpacing,
-      h1LineHeight
+      h1FontSize: fontSize,
+      h1LetterSpacing: letterSpacing,
+      h1Margin: margin,
+      lineHeight
     }
   }
 }) => {
   return (
     <h1
       style={{
-        color,
-        fontFamily: h1FontFamily,
-        fontSize: h1FontSize,
-        fontWeight: h1FontWeight,
-        letterSpacing: h1LetterSpacing,
-        lineHeight: h1LineHeight,
-        overflow: 'hidden',
+        color: color || textColor,
+        fontFamily: h1FontFamily || fontFamily,
+        fontSize,
+        fontWeight,
+        letterSpacing,
+        lineHeight,
+        margin,
         textAlign,
         textShadow,
       }}

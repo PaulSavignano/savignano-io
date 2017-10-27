@@ -8,26 +8,29 @@ const H2 = ({
   className,
   color,
   textAlign,
+  textColor,
   textShadow,
   typography: {
     values: {
+      fontFamily,
+      fontWeight,
       h2FontFamily,
-      h2FontSize,
-      h2FontWeight,
-      h2LetterSpacing,
-      h2LineHeight,
+      h2FontSize: fontSize,
+      h2LetterSpacing: letterSpacing,
+      h2Margin: margin,
+      lineHeight
     }
   }
 }) => (
   <h2
     style={{
-      color,
-      fontFamily: h2FontFamily,
-      fontSize: h2FontSize,
-      fontWeight: h2FontWeight,
-      letterSpacing: h2LetterSpacing,
-      lineHeight: h2LineHeight,
-      overflow: 'hidden',
+      color: color || textColor,
+      fontFamily: h2FontFamily || fontFamily,
+      fontSize,
+      fontWeight,
+      letterSpacing,
+      lineHeight,
+      margin,
       textAlign,
       textShadow,
     }}

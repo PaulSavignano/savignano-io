@@ -6,27 +6,29 @@ import typographyContainer from '../../containers/typography/typographyContainer
 const P = ({
   children,
   className,
-  fontFamily,
   color,
+  textColor,
   typography: {
     values: {
+      fontFamily,
+      fontWeight,
       pFontFamily,
-      pFontSize,
-      pFontWeight,
-      pLetterSpacing,
-      pLineHeight
+      pFontSize: fontSize,
+      pLetterSpacing: letterSpacing,
+      pMargin: margin,
+      lineHeight
     }
   }
 }) => (
   <div
     style={{
-      color,
-      fontFamily: pFontFamily,
-      fontSize: pFontSize,
-      fontWeight: pFontWeight,
-      letterSpacing: pLetterSpacing,
-      lineHeight: pLineHeight,
-      overflow: 'hidden',
+      color: color || textColor,
+      fontFamily: pFontFamily || fontFamily,
+      fontSize,
+      fontWeight,
+      letterSpacing,
+      lineHeight,
+      margin
     }}
     {...className}
   >

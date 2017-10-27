@@ -6,14 +6,24 @@ import { ObjectID } from 'mongodb'
 
 import Address from './Address'
 import Order from './Order'
-import Token from './Token'
 
 const UserSchema = new Schema({
+  addresses: [{ type: Schema.ObjectId, ref: 'Address' }],
+  brand: { type: Schema.ObjectId, ref: 'Brand' },
+  brandName: { type: String, maxlength: 25 },
+  password: { type: String, required: true, maxlength: 500, minlength: 6 },
+  passwordResetExpires: { type: Date },
+  passwordResetToken: { type: String, default: '' },
+  roles: {
+    type: [{ type: String, enum: ['admin', 'master', 'owner', 'user'], maxlength: 25 }],
+    default: ['user']
+  },
   values: {
     email: {
       type: String,
       required: true,
       trim: true,
+      maxlength: 50,
       minlength: 1,
       unique: true,
       lowercase: true,
@@ -22,24 +32,12 @@ const UserSchema = new Schema({
         message: '{VALUE} is not a valid email'
       }
     },
-    firstName: { type: String, trim: true, minlength: 1, required: true },
-    lastName: { type: String, trim: true, minlength: 1, required: true },
-    phone: { type: String, trim: true, minlength: 1 },
-  },
-  addresses: [{ type: Schema.ObjectId, ref: 'Address' }],
-  password: { type: String, required: true, minlength: 6 },
-  roles: {
-    type: [{ type: String, enum: ['admin', 'owner', 'user'] }],
-    default: ['user']
-  },
-  tokens: [{
-    createdAt: { type: Date, default: Date.now },
-    access: { type: String, required: true },
-    token: { type: String, required: true }
-  }],
-  passwordResetToken: { type: String, default: '' },
-  passwordResetExpires: { type: Date },
-  createdAt: { type: Date, default: Date.now }
+    firstName: { type: String, trim: true, maxlength: 100, minlength: 1, required: true },
+    lastName: { type: String, trim: true, maxlength: 100, minlength: 1, required: true },
+    phone: { type: String, trim: true, maxlength: 50, minlength: 1 },
+  }
+}, {
+  timestamps: true
 })
 
 function autopopulate(next) {
@@ -58,66 +56,24 @@ UserSchema.methods.toJSON = function() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-UserSchema.statics.findByToken = function(token, roles) {
-  const User = this
-  let decoded
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET)
-    console.log(decoded)
-  } catch (error) {
-    return Promise.reject(error)
-  }
-  return Token.findOne({ token, user: decoded._id })
-  .then(token => {
-    return User.findOne({ _id: token.user })
-  })
-}
-
-
-
-
-
-UserSchema.methods.removeToken = function(token) {
-  const user = this
-  return Token.remove({ user: user._id })
-}
-
-
-
-
-
 UserSchema.statics.findByCredentials = function(email, password) {
   const User = this
   return User.findOne({ 'values.email': email.toLowerCase() })
-    .populate({ path: 'addresses' })
-    .then(user => {
-      if (!user) return Promise.reject({ email: 'User not found' })
-      return new Promise((resolve, reject) => {
-        bcrypt.compare(password, user.password)
-        .then(res => {
-          if (res) {
-            resolve(user)
-          } else {
-            reject({ password: 'Password does not match' })
-          }
-        })
+  .populate({ path: 'addresses' })
+  .then(user => {
+    if (!user) return Promise.reject({ email: 'User not found' })
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password)
+      .then(res => {
+        if (res) {
+          resolve(user)
+        } else {
+          reject({ password: 'Password does not match' })
+        }
       })
     })
+  })
 }
-
-
-
-
 
 
 UserSchema.pre('save', function(next) {
@@ -137,7 +93,6 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.post('findOneAndRemove', function(doc, next) {
   Address.deleteMany({ user: doc._id }).catch(error => console.error(error))
-  Token.deleteMany({ user: doc._id }).catch(error => console.error(error))
   next()
 })
 

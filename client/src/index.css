@@ -1,6 +1,4 @@
-svg {
-  fill: inherit !important;
-}
+
 body {
   margin: 0;
 }
@@ -26,20 +24,6 @@ h1, h2, h3, p {
 
 .card {
   margin: 16px;
-}
-
-
-
-
-
-
-
-
-
-.background-image {
-  background-position: center center !important;
-  background-repeat:  no-repeat !important;
-  background-size:  cover !important;
 }
 
 

@@ -24,8 +24,6 @@ const HeroContent = ({
       h3Color,
       h3TextShadow,
       pColor,
-      mediaBorder,
-      mediaElevation,
       minHeight,
     }
   },
@@ -39,6 +37,7 @@ const HeroContent = ({
     image,
     values: {
       backgroundColor,
+      backgroundPositionX,
       button1Text,
       button1Link,
       button2Text,
@@ -47,6 +46,10 @@ const HeroContent = ({
       h2Text,
       h3Text,
       iframe,
+      mediaBorder,
+      mediaBorderRadius,
+      mediaElevation,
+      mediaFlex,
       pText
     }
   },
@@ -54,10 +57,16 @@ const HeroContent = ({
   return (
     <div>
       {hasMedia &&
-        <Media
-          image={image}
-          iframe={iframe}
-        />
+        <div className="hero-media">
+          <Media
+            borderRadius={mediaBorderRadius}
+            elevation={mediaElevation}
+            flex={mediaFlex}
+            image={image}
+            iframe={iframe}
+          />
+        </div>
+
       }
       {hasText &&
         <Text

@@ -13,10 +13,13 @@ class AppBarNavigation extends Component {
     navClass: null,
     width: 0
   }
+  handleSearchToggle = () => {
+    const { dispatch, searchOpen } = this.props
+    return dispatch(searchToggle(!searchOpen))
+  }
   componentDidMount() {
     const width = this.navigation.clientWidth
     const totalWidth = width/.75
-
     let navClass
     switch(true) {
       case totalWidth < 375:
@@ -39,10 +42,6 @@ class AppBarNavigation extends Component {
     }
     this.setState({ navClass, width });
   }
-  handleSearchToggle = () => {
-    const { dispatch, searchOpen } = this.props
-    return dispatch(searchToggle(!searchOpen))
-  }
   render() {
     const { navClass } = this.state
     const {
@@ -51,8 +50,10 @@ class AppBarNavigation extends Component {
       dispatch,
       firstName,
       fontFamily,
+      fontWeight,
       pages,
       phone,
+      phoneSize,
       primary1Color,
       showPhone,
     } = this.props
@@ -64,7 +65,13 @@ class AppBarNavigation extends Component {
       >
         {showPhone === 'false' ? null :
         <div style={{ color: primary1Color }} className="appbar-phone-container">
-          <a href={`tel:${phone.replace(/\D+/g, '')}`} className="appbar-phone">{phone}</a>
+          <a
+            href={`tel:${phone.replace(/\D+/g, '')}`}
+            className="appbar-phone"
+            style={{ fontSize: phoneSize, fontWeight }}
+          >
+            {phone}
+          </a>
         </div>
         }
         <div className="appbar-navigation">
@@ -104,7 +111,6 @@ class AppBarNavigation extends Component {
             />
           }
         </div>
-
       </div>
     )
   }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Card, CardTitle, CardText } from 'material-ui/Card'
 import { Field, reduxForm } from 'redux-form'
 import renderHTML from 'react-render-html'
 
 import './contactForm.css'
+import H2 from '../typography/H2'
 import H3 from '../typography/H3'
 import P from '../typography/P'
 import SuccessableButton from '../buttons/SuccessableButton'
@@ -33,30 +33,37 @@ class ContactFormContent extends Component {
   }
   render() {
     const {
-      elevation,
       error,
       handleSubmit,
       invalid,
       item: {
         values: {
           button1Text,
+          h2Text,
           h3Text,
           pText
         }
       },
       phone,
       pristine,
-      reset,
       submitSucceeded,
       submitting,
     } = this.props
     return (
       <div>
         <div className="contact-form-title">
-          <div className="contact-form-heading">
-            <H3>{h3Text}</H3>
-            { phone && <H3><a href={`tel:${phone.replace(/\D+/g, '')}`}>{phone}</a></H3>}
-          </div>
+          {h2Text &&
+            <div className="contact-form-heading">
+              <H2>{h2Text}</H2>
+              {phone && <H2><a href={`tel:${phone.replace(/\D+/g, '')}`}>{phone}</a></H2>}
+            </div>
+          }
+          {h3Text &&
+            <div className="contact-form-heading">
+              <H3>{h3Text}</H3>
+              {phone && <H3><a href={`tel:${phone.replace(/\D+/g, '')}`}>{phone}</a></H3>}
+            </div>
+          }
           <P>{renderHTML(pText)}</P>
         </div>
         <form onSubmit={handleSubmit(this.handleFormSubmit)} >

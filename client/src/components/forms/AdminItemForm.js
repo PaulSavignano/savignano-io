@@ -22,11 +22,10 @@ import adminItemForms from './adminItemForms'
 class AdminItemForm extends Component {
   state = {
     backgroundImageEdit: false,
-    deleteBackgroundImage: false,
     backgroundTimeoutId: null,
+    deleteBackgroundImage: false,
     disabled: true,
     imageEdit: false,
-    deleteImage: false,
     imageTimeoutId: null,
     itemForm: null
   }
@@ -53,21 +52,21 @@ class AdminItemForm extends Component {
     })
   }
   handleImageRemove = () => {
-    const { dispatch, editItem: { item: { _id, image }}} = this.props
+    const { editItem: { item: { image }}} = this.props
     const deleteImage = image.src ? true : false
     this.setState({
-      disabled: false,
       imageEdit: false,
-      deleteImage
+      deleteImage,
+      disabled: false
     })
   }
   handleBackgroundImageRemove = () => {
-    const { dispatch, editItem: { item: { _id, backgroundImage }}} = this.props
+    const { editItem: { item: { backgroundImage }}} = this.props
     const deleteBackgroundImage = backgroundImage.src ? true : false
     this.setState({
-      disabled: false,
       backgroundImageEdit: false,
-      deleteBackgroundImage: true
+      deleteBackgroundImage,
+      disabled: false
     })
   }
   handleFormSubmit = (values) => {
@@ -88,7 +87,6 @@ class AdminItemForm extends Component {
         }
       }
     } = this.props
-    console.log('handleing submit')
     const oldImageSrc = image && image.src ? image.src : null
     const oldBackgroundImageSrc = backgroundImage && backgroundImage.src ? backgroundImage.src : null
     const newImage = imageEdit ? this.imageEditor.handleSave() : null
@@ -184,7 +182,6 @@ class AdminItemForm extends Component {
           }
         }))
       default:
-        console.log('dispatching update', _id)
         return dispatch(fetchUpdate({
           _id,
           path: 'update-values',
@@ -201,26 +198,23 @@ class AdminItemForm extends Component {
     }
   }
   handleStopEdit = () => this.props.dispatch(stopEdit())
-  componentWillMount() {
-    const { editItem: { kind }} = this.props
-    const itemForm = adminItemForms.find(form => form.name === kind)
-    this.setState({ itemForm })
+  handleNumberToString = value => {
+    if (value) return value.toString()
   }
-  componentWillReceiveProps({
-    invalid,
-    pristine,
-  }) {
-    if (invalid !== this.props.invalid) this.setState({ disabled: invalid })
+  componentWillMount() {
+    const {
+      editItem: { kind },
+      pristine
+    } = this.props
+    const itemForm = adminItemForms.find(form => form.name === kind)
+    this.setState({ disabled: pristine, itemForm })
+  }
+  componentWillReceiveProps({ pristine }) {
     if (pristine !== this.props.pristine) this.setState({ disabled: pristine })
   }
   setImageFormRef = (imageEditor) => this.imageEditor = imageEditor
   setBackgroundImageFormRef = (backgroundImageEditor) => this.backgroundImageEditor = backgroundImageEditor
   render() {
-    const {
-      backgroundImageEdit,
-      disabled,
-      imageEdit
-    } = this.state
     const {
       error,
       handleSubmit,
@@ -229,8 +223,6 @@ class AdminItemForm extends Component {
         item: { _id, backgroundImage, image },
         kind,
       },
-      invalid,
-      pristine,
       submitting
     } = this.props
     return (
@@ -239,7 +231,7 @@ class AdminItemForm extends Component {
         actions={
           <div className="button-container">
             <RaisedButton
-              disabled={disabled}
+              disabled={this.state.disabled}
               onTouchTap={handleSubmit(this.handleFormSubmit)}
               label={submitting ?
                 <CircularProgress key={1} color="#ffffff" size={25} style={{ verticalAlign: 'middle' }} />
@@ -300,7 +292,6 @@ class AdminItemForm extends Component {
           }
           <div className="field-container">
             {this.state.itemForm.fields.map(({ name, type, options }) => {
-              const format = value => value === undefined ? undefined : value.toString()
               switch(type) {
                 case 'select':
                   return <Field
@@ -335,7 +326,7 @@ class AdminItemForm extends Component {
                     label={name}
                     name={name}
                     type={type}
-                    format={format}
+                    normalize={this.handleNumberToString}
                          />
                 default:
                   return <Field

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Card } from 'material-ui/Card'
 
+import './hero.css'
 import heroContainer from '../../containers/heros/heroContainer'
 import HeroContent from './HeroContent'
 import { startEdit } from '../../actions/editItem'
@@ -21,7 +22,6 @@ class AdminHero extends Component {
       hasMedia,
       item,
       propsForParent,
-      propsForChild
     } = this.props
     return (
       <div
@@ -31,7 +31,7 @@ class AdminHero extends Component {
         <Card
           zDepth={0}
           onTouchTap={this.handleStartEdit}
-          {...propsForChild}
+          className="hero-child"
         >
           <HeroContent
             dispatch={dispatch}

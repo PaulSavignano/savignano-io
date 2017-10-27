@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Card, CardTitle, CardText } from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
+import { Card } from 'material-ui/Card'
 
 import './contactForm.css'
 import contactFormContainer from '../../containers/contactForms/contactFormContainer'
@@ -20,13 +18,12 @@ class AdminContactForm extends Component {
   }
   render() {
     const {
-      dispatch,
       elevation,
       onMouseEnter,
       onMouseLeave,
       item,
-      phone,
       user,
+      phone
     } = this.props
     return (
       <Card
@@ -39,6 +36,7 @@ class AdminContactForm extends Component {
         <ContactFormContent
           item={item}
           initialValues={user}
+          phone={phone}
         />
       </Card>
     )

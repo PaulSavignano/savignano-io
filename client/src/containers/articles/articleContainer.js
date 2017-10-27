@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import { loadImage } from '../../utils/loadImages'
+
 const articleContainer = (ComposedComponent) => {
   class ArticleContainer extends Component {
     state = {
       buttonProps: null,
       headingProps: null,
       mediaProps: null,
-      paragraphProps: null
+      paragraphProps: null,
+      loadingImage: true
     }
     handleContent = (articleStyle, item) => {
       const {
@@ -29,7 +32,6 @@ const articleContainer = (ComposedComponent) => {
         h3TextShadow,
         pColor,
         mediaBorder,
-        mediaBoxShadow,
         mediaElevation,
       } = articleStyle
       const {
@@ -39,18 +41,15 @@ const articleContainer = (ComposedComponent) => {
           button1Link,
           button2Text,
           button2Link,
-          flexFlow,
           h1Text,
           h2Text,
           h3Text,
           iframe,
-          mediaAlign,
           mediaFlex,
           mediaBorder: itemMediaBorder,
-          mediaBoxShadow: itemMediaBoxShadow,
+          mediaBorderRadius,
           mediaElevation: itemMediaElevation,
           pText,
-          textFlex,
         }
       } = item
       const buttonProps = {
@@ -83,8 +82,8 @@ const articleContainer = (ComposedComponent) => {
       const mediaProps = {
         className: 'article-media',
         border: itemMediaBorder || mediaBorder,
-        boxShadow: itemMediaBoxShadow || mediaBoxShadow,
-        elevation: itemMediaElevation || mediaElevation,
+        borderRadius: mediaBorderRadius,
+        elevation: itemMediaElevation === 'articleStyle' ? mediaElevation : Number(itemMediaElevation),
         flex: mediaFlex,
         iframe,
         image,
