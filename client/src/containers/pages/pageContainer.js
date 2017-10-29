@@ -14,9 +14,22 @@ const pageContainer = (ComposedComponent) => {
         pageSlug,
         textColor
       } = this.props
+      const { 
+        backgroundImage,
+        values: { backgroundColor, backgroundPosition }
+      } = page
+      const propsForParent = {
+        style: {
+          backgroundImage: backgroundImage && backgroundImage.src ? `url(${backgroundImage.src})` : null,
+          backgroundPosition,
+          backgroundColor,
+        },
+        className: backgroundImage && backgroundImage.src && 'background-image'
+      }
       const props = {
         dispatch,
         page,
+        propsForParent,
         textColor
       }
       return (

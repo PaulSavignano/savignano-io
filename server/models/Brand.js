@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
+import { deleteFile } from '../utils/s3'
+
 const BrandSchema = new Schema({
   appBar: {
     image: {
@@ -48,7 +50,12 @@ const BrandSchema = new Schema({
     }
   },
   brandSlug: { type: String, maxlength: 25 },
-  bodyStyle: {
+  body: {
+    backgroundImage: {
+      src: { type: String, trim: true, maxlength: 150 },
+      width: { type: Number, trim: true, default: 1920, max: 10000, min: 0 },
+      height: { type: Number, trim: true, default: 1080, max: 10000, min: 0 }
+    },
     values: {
       backgroundColor: { type: String, trim: true, default: 'rgb(255, 255, 255)', maxlength: 25 },
       color: { type: String, trim: true, maxlength: 25 },
@@ -68,7 +75,6 @@ const BrandSchema = new Schema({
       github: { type: String, trim: true, maxlength: 150 },
       google: { type: String, trim: true, maxlength: 150 },
       googleAnalyticsUA: { type: String, trim: true, maxlength: 150 },
-      googleSiteVerification: { type: String, trim: true, maxlength: 150 },
       imageBorderRadius: { type: String, trim: true, maxlength: 50 },
       instagram: { type: String, trim: true, maxlength: 150 },
       keywords: { type: String, trim: true, maxlength: 500 },
@@ -110,6 +116,11 @@ const BrandSchema = new Schema({
     }
   },
   footer: {
+    backgroundImage: {
+      src: { type: String, trim: true, maxlength: 150 },
+      width: { type: Number, trim: true, default: 1920, max: 10000, min: 0 },
+      height: { type: Number, trim: true, default: 1080, max: 10000, min: 0 }
+    },
     image: {
       src: { type: String, trim: true, maxlength: 150 },
       width: { type: Number, trim: true, default: 128, max: 10000, min: 0 },
@@ -208,10 +219,24 @@ const BrandSchema = new Schema({
 BrandSchema.post('findOneAndRemove', function(doc) {
   const { appBar, footer } = doc
   if (appBar.image.src) {
-    deleteFile({ Key: appBar.image.src }).catch(err => console.error(err))
+    deleteFile({ Key: appBar.image.src })
+    .then(data => console.log(data))
+    .catch(err => console.error(err))
   }
   if (footer.image.src) {
-    deleteFile({ Key: footer.image.src }).catch(err => console.error(err))
+    deleteFile({ Key: footer.image.src })
+    .then(data => console.log(data))
+    .catch(err => console.error(err))
+  }
+  if (footer.backgroundImage.src) {
+    deleteFile({ Key: footer.backgroundImage.src })
+    .then(data => console.log(data))
+    .catch(err => console.error(err))
+  }
+  if (body.backgroundImage.src) {
+    deleteFile({ Key: body.backgroundImage.src })
+    .then(data => console.log(data))
+    .catch(err => console.error(err))
   }
 })
 

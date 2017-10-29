@@ -6,12 +6,12 @@ import ContactForm from './ContactForm'
 import Hero from './Hero'
 import Product from './Product'
 
-import { deleteFiles } from '../utils/s3'
+import { deleteFile } from '../utils/s3'
 
 const SectionSchema = new Schema({
   brand: { type: Schema.ObjectId, ref: 'Brand' },
   brandName: { type: String, maxlength: 25 },
-  image: {
+  backgroundImage: {
     src: { type: String, trim: true, maxlength: 150 },
     width: { type: Number, trim: true, default: 1920, max: 10000, min: 0 },
     height: { type: Number, trim: true, default: 1080, max: 10000, min: 0 }
@@ -24,7 +24,8 @@ const SectionSchema = new Schema({
   pageSlug: { type: String, trim: true, maxlength: 100 },
   values: {
     alignItems: { type: String, trim: true, maxlength: 50 },
-    containerBackgroundColor: { type: String, trim: true, maxlength: 50 },
+    backgroundColor: { type: String, trim: true, maxlength: 50 },
+    backgroundPosition: { type: String, trim: true, maxlength: 50 },
     flexFlow: { type: String, trim: true, default: 'row wrap', maxlength: 50 },
     justifyContent: { type: String, trim: true, default: 'space-between', maxlength: 50 },
     kind: { type: String, trim: true, default: 'Flex', maxlength: 50 },
@@ -40,8 +41,10 @@ const SectionSchema = new Schema({
 
 
 SectionSchema.post('findOneAndRemove', function(doc, next) {
-  if (doc.image && doc.image.src) {
-    deleteFile({ Key: doc.image.src }).catch(err => console.error(err))
+  if (doc.backgroundImage && doc.backgroundImage.src) {
+    deleteFile({ Key: doc.backgroundImage.src })
+    .then(data => console.log(data))
+    .catch(err => console.error(err))
   }
   doc.items.forEach(item => {
     switch(item.kind) {
